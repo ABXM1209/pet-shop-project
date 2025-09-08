@@ -1,19 +1,23 @@
-﻿namespace dataaccess;
+﻿using System;
+using System.Collections.Generic;
+
+namespace dataaccess;
 
 public partial class Pet
 {
-    public Pet(string id, string name, DateTime createdAt, int age)
-    {
-        Id = id;
-        Name = name;
-        CreatedAt = createdAt;
-        Age = age;
-    }
-    
-    public string Id { get; set; }
-    public string Name { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public int Age { get; set; }
-    
-    
+    public string Id { get; set; } = null!;
+
+    public string Name { get; set; } = null!;
+
+    public string Breed { get; set; } = null!;
+
+    public DateTime Createdat { get; set; }
+
+    public DateOnly? SoldDate { get; set; }
+
+    public decimal Price { get; set; }
+
+    public string Seller { get; set; } = null!;
+
+    public virtual Seller SellerNavigation { get; set; } = null!;
 }
