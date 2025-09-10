@@ -1,43 +1,32 @@
+using api.Services;
 using dataaccess;
 using Microsoft.EntityFrameworkCore;
-using service;
 
 namespace API;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static void ConfigureServices(IServiceCollection services)
     {
-        var builder = WebApplication.CreateBuilder(args);
-        ConfigurationServices(builder.Services);
-        
-        var app = builder.Build();
-        
-        ConfigureApp(app);
-        
-    }
-
-    public static void ConfigurationServices(IServiceCollection services)
-    {
-        services.AddDbContext<MyDbContext>(config =>
-        {
-            config.UseSqlite("Data Source=pets.db");
-        });
-        services.AddScoped<PetService>();
-        services.AddOpenApiDocument();
         services.AddControllers();
+        services.AddOpenApiDocument();
+        services.AddScoped<PetService>();
+        services.AddDbContext<MyDbContext>((services, options) =>
+        {
+            options.UseNpgsql(services.GetRequiredService<IConfiguration>()
+                .GetValue<string>("Db"));
+        });
     }
 
-    public static void ConfigureApp(WebApplication app)
+    public static void Main()
     {
-        using (var scope = app.Services.CreateScope())
-        {
-            var dbcontext = scope.ServiceProvider.GetRequiredService<MyDbContext>();
-            dbcontext.Database.EnsureCreated();
-        }
+        var builder = WebApplication.CreateBuilder();
+        ConfigureServices(builder.Services);
+        var app = builder.Build();
         app.UseOpenApi();
         app.UseSwaggerUi();
         app.MapControllers();
         app.Run();
     }
 }
+

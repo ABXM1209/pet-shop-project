@@ -3,14 +3,21 @@ using System.Diagnostics.CodeAnalysis;
 
 public record CreatePetRequestDto
 {
-    public CreatePetRequestDto(string name, int age)
+    public CreatePetRequestDto(string name, string breed, DateTime createdAt, DateOnly soldDate, int price, string sellerId)
     {
         Name = name;
-        Age = age;
+        Breed = breed;
+        CreatedAt = createdAt;
+        SoldDate = soldDate;
+        Price = price;
+        SellerId = sellerId;
     }
 
-    [MinLength(2)]
+    [MinLength(3)]
     public string Name { get; set; }
-    [Range(0,15)] [NotNull] [Required]
-    public int Age { get; set; }
+    public string Breed { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateOnly SoldDate { get; set; }
+    public int Price { get; set; }
+    public string SellerId { get; set; }
 }
